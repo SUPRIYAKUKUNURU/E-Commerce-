@@ -18,7 +18,7 @@ function displayCards(cards) {
                 <hr>
                 <p>$${card.price}</p>
                 <hr>
-                <button style='background-color:black;color:white;border-radius:5px;padding:5px 10px'>Details</button>
+                <button style='background-color:black;color:white;border-radius:5px;padding:5px 10px; margin-bottom:10px;'>Details</button>
                 <button onclick="addToCart(${card.id}, '${card.title}', ${card.price}, '${card.image}')" style="background-color:black;color:white;border-radius:5px;padding:5px 10px">Add to Cart</button>
             </div></center>`;
     });
