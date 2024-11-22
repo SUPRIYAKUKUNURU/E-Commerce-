@@ -87,7 +87,7 @@ function loadCart() {
         const shippingCost = 30;
         const finalTotalPrice = totalPrice + shippingCost;
         checkout.innerHTML = `
-            <div class="container">
+            <div class="container order-summary">
                 <div class="row mb-3">
                     <div class="col-12">
                         <p class="h4"><strong>Order Summary</strong></p>
