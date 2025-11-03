@@ -1,4 +1,5 @@
 let allData = [];  
+
 fetch('https://fakestoreapi.com/products')
     .then(response => response.json())
     .then(data => {
@@ -6,6 +7,7 @@ fetch('https://fakestoreapi.com/products')
         displayCards(allData);
     })
     .catch(error => console.error('Error fetching products:', error));
+
 function displayCards(cards) {
     let div = document.getElementById('products');
     div.innerHTML = ''; 
@@ -23,6 +25,7 @@ function displayCards(cards) {
             </div></center>`;
     });
 }
+
 function addToCart(id, title, price, image) {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const product = cart.find(item => item.id === id);
@@ -32,12 +35,14 @@ function addToCart(id, title, price, image) {
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
 }
+
 function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem('cart')) || []; 
-    const totalQuantity = cart.length;
+    const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
     const cartValue = document.getElementById('icon-value');
     cartValue.textContent = totalQuantity; 
 }
+
 function loadCart() {
     const cartItemsContainer = document.getElementById('cart-items');
     const checkout = document.getElementById('checkout');
@@ -46,6 +51,7 @@ function loadCart() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     cartItemsContainer.innerHTML = "";
     let totalPrice = 0;
+
     if (cart.length === 0) {
         emptyCartDiv.style.display = 'block'; 
         checkout.style.display = 'none'; 
@@ -53,11 +59,13 @@ function loadCart() {
     } else {
         emptyCartDiv.style.display = 'none';
         checkout.style.display = 'block';
+
         let h1 = document.createElement('h1');
         h1.textContent = 'Item List';
         h1.style.padding = '0px 0px 20px 50px';
         h1.style.borderBottom = '1px solid black';
         cartItemsContainer.appendChild(h1);
+
         cart.forEach((item) => {
             const itemTotal = item.price * item.quantity;
             totalPrice += itemTotal;
@@ -83,49 +91,33 @@ function loadCart() {
                     </div>
                 </div>`;
             cartItemsContainer.appendChild(cartItem);
-        })
+        });
+
         const shippingCost = 30;
         const finalTotalPrice = totalPrice + shippingCost;
+
         checkout.innerHTML = `
             <div class="container order-summary">
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <p class="h4"><strong>Order Summary</strong></p>
-                        <hr>
-                    </div>
+                <p class="h4"><strong>Order Summary</strong></p>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <p>Products (${cart.reduce((acc, item) => acc + item.quantity, 0)})</p>
+                    <p>$${totalPrice.toFixed(2)}</p>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <p>Products (<span>${cart.reduce((acc, item) => acc + item.quantity, 0)}</span>)</p>
-                    </div>
-                    <div class="col-6 text-end">
-                        <p>$${totalPrice.toFixed(2)}</p>
-                    </div>
+                <div class="d-flex justify-content-between">
+                    <p>Shipping</p>
+                    <p>$${shippingCost.toFixed(2)}</p>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <p>Shipping</p>
-                    </div>
-                    <div class="col-6 text-end">
-                        <p>$${shippingCost.toFixed(2)}</p>
-                    </div>
+                <hr>
+                <div class="d-flex justify-content-between fw-bold">
+                    <p>Total Price:</p>
+                    <p id="total-price">$${finalTotalPrice.toFixed(2)}</p>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <p><strong>Total Price:</strong></p>
-                    </div>
-                    <div class="col-6 text-end">
-                        <p id="total-price" class="fw-bold">$${finalTotalPrice.toFixed(2)}</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 text-center">
-                        <button class="btn btn-dark w-100">Go to checkout</button>
-                    </div>
-                </div>
+                <button class="btn btn-dark w-100 mt-3">Go to checkout</button>
             </div>`;
     }
 }
+
 function changeQuantity(id, change) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     const itemIndex = cart.findIndex(item => item.id === id);
@@ -139,14 +131,15 @@ function changeQuantity(id, change) {
         updateCartCount(); 
     }
 }
+
 function filter(category) {
     const filteredData = category === 'all' ? allData : allData.filter(card => card.category === category);
     displayCards(filteredData);
 }
+
 document.addEventListener('DOMContentLoaded', () => {
     updateCartCount();
     if (document.getElementById('cart-items')) {
         loadCart();
-}
+    }
 });
-// localStorage.clear()
